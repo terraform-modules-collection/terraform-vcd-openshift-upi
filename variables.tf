@@ -59,7 +59,6 @@ variable "workerNodes" {
   type = list(object({
     name = string
     ipaddr = string
-    console = string
     ram = number
     cpu = number
   }))
@@ -70,7 +69,6 @@ variable "masterNodes" {
   type = list(object({
     name = string
     ipaddr = string
-    console = string
     ram = number
     cpu = number
   }))
