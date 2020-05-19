@@ -34,18 +34,18 @@ variable "dns2" {
   description = "Second DNS server"
 }
 
-variable "bootstrapNodeIgnUrl" {
-  type = string
-  description = "URL to ignition file for bootstrap node."
-}
-variable "masterNodesIgnUrl" {
-  type = string
-  description = "URL to ignition file for master nodes."
-}
-variable "workerNodesIgnUrl" {
-  type = string
-  description = "URL to ignition file for worker nodes."
-}
+//variable "bootstrapNodeIgnUrl" {
+//  type = string
+//  description = "URL to ignition file for bootstrap node."
+//}
+//variable "masterNodesIgnUrl" {
+//  type = string
+//  description = "URL to ignition file for master nodes."
+//}
+//variable "workerNodesIgnUrl" {
+//  type = string
+//  description = "URL to ignition file for worker nodes."
+//}
 
 variable "bootstrapNode" {
   type = object({
