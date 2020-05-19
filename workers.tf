@@ -2,7 +2,7 @@ resource "vcd_vapp_vm" "worker-vms" {
   count = length(var.workerNodes)
   vapp_name = var.vappName
   name = var.workerNodes[count.index]["name"]
-  catalog_name = var.catalogName
+  catalog_name = var.vcdCatalogName
   template_name = var.rhcosOvaTemplate
   memory =  var.workerNodes[count.index]["ram"]
   cpus = var.workerNodes[count.index]["cpu"]
@@ -27,7 +27,7 @@ data "template_file" "worker-vm-ingition-template" {
   count = length(var.workerNodes)
   template = file("${path.module}/templates/ignition.yaml")
   vars =  {
-    ignUrl = var.workerNodesIgnUrl
+    ignUrl = local.workerIgnUrl
     ocpCoreUserPassHash = var.ocpCoreUserPassHash
     ocpSSHPubKey = var.ocpSSHPubKey
     hostname = "${var.workerNodes[count.index]["name"]}.${var.clusterName}.${var.baseDomain}"

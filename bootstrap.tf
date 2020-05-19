@@ -1,7 +1,7 @@
 resource "vcd_vapp_vm" "bootstrap_vm" {
   vapp_name = var.vappName
   name = var.bootstrapNode.name
-  catalog_name = var.catalogName
+  catalog_name = var.vcdCatalogName
   template_name = var.rhcosOvaTemplate
   memory =  var.bootstrapNode.ram
   cpus = var.bootstrapNode.cpu
@@ -22,7 +22,7 @@ resource "vcd_vapp_vm" "bootstrap_vm" {
 data "template_file" "bootstrap-vm-ingition-template" {
   template = file("${path.module}/templates/ignition.yaml")
   vars =  {
-    ignUrl = var.bootstrapNodeIgnUrl
+    ignUrl = local.bootstrapIgnUrl
     ocpCoreUserPassHash = var.ocpCoreUserPassHash
     ocpSSHPubKey = var.ocpSSHPubKey
     hostname = "${var.bootstrapNode.name}.${var.clusterName}.${var.baseDomain}"

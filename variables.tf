@@ -102,7 +102,7 @@ variable "rhcosOvaTemplate" {
   type = string
   description = "RHCOS OVA template"
 }
-variable "catalogName" {
+variable "vcdCatalogName" {
   type = string
   description = "Vcloud Director catalog name"
 }
@@ -128,6 +128,20 @@ variable "vcdVirtualDC" {
   description = "Vcloud Director virtual datacenter name"
 }
 
+variable "minioServer" {
+  type = string
+  description = "Minio S3 server hostname without schema"
+}
+variable "minioAccessKey" {
+  type = string
+  description = "S3 access key"
+}
+variable "minioSecretKey" {
+  type = string
+  description = "S3 secret key"
+}
 
-
-
+variable "minioServerScheme" {
+  type = string
+  default = "http"
+}

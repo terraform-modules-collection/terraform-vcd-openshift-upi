@@ -2,7 +2,7 @@ resource "vcd_vapp_vm" "masters-vms" {
   count = length(var.masterNodes)
   vapp_name = var.vappName
   name = var.masterNodes[count.index]["name"]
-  catalog_name = var.catalogName
+  catalog_name = var.vcdCatalogName
   template_name = var.rhcosOvaTemplate
   memory =  var.masterNodes[count.index]["ram"]
   cpus = var.masterNodes[count.index]["cpu"]
@@ -27,7 +27,7 @@ data "template_file" "master-vm-ingition-template" {
   count = length(var.masterNodes)
   template = file("${path.module}/templates/ignition.yaml")
   vars =  {
-    ignUrl = var.masterNodesIgnUrl
+    ignUrl = local.masterIgnUrl
     ocpCoreUserPassHash = var.ocpCoreUserPassHash
     ocpSSHPubKey = var.ocpSSHPubKey
     hostname = "${var.masterNodes[count.index]["name"]}.${var.clusterName}.${var.baseDomain}"
