@@ -79,9 +79,6 @@ variable "baseDomain" {
   type = string
   description = "Base organization  domain"
 }
-variable "publicBucketName" {
-  type = string
-}
 
 variable "networkType" {
   type = "string"
