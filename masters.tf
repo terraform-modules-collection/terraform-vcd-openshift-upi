@@ -28,8 +28,8 @@ data "template_file" "master-vm-ingition-template" {
   template = file("${path.module}/templates/ignition.yaml")
   vars =  {
     ignUrl = local.masterIgnUrl
-    ocpCoreUserPassHash = var.ocpCoreUserPassHash
-    ocpSSHPubKey = var.ocpSSHPubKey
+    ocpCoreUserPassHash = base64decode(var.ocpCoreUserPassHash)
+    ocpSSHPubKey = base64decode(var.ocpSSHPubKey)
     hostname = "${var.masterNodes[count.index]["name"]}.${var.clusterName}.${var.baseDomain}"
     ipaddr = var.masterNodes[count.index]["ipaddr"]
     netMask = var.netMask

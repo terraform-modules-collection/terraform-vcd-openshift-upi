@@ -23,8 +23,8 @@ data "template_file" "bootstrap-vm-ingition-template" {
   template = file("${path.module}/templates/ignition.yaml")
   vars =  {
     ignUrl = local.bootstrapIgnUrl
-    ocpCoreUserPassHash = var.ocpCoreUserPassHash
-    ocpSSHPubKey = var.ocpSSHPubKey
+    ocpCoreUserPassHash =  base64decode(var.ocpCoreUserPassHash)
+    ocpSSHPubKey =  base64decode(var.ocpSSHPubKey)
     hostname = "${var.bootstrapNode.name}.${var.clusterName}.${var.baseDomain}"
     ipaddr = var.bootstrapNode.ipaddr
     netMask = var.netMask

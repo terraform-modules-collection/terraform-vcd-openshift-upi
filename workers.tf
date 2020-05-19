@@ -28,8 +28,8 @@ data "template_file" "worker-vm-ingition-template" {
   template = file("${path.module}/templates/ignition.yaml")
   vars =  {
     ignUrl = local.workerIgnUrl
-    ocpCoreUserPassHash = var.ocpCoreUserPassHash
-    ocpSSHPubKey = var.ocpSSHPubKey
+    ocpCoreUserPassHash =  base64decode(var.ocpCoreUserPassHash)
+    ocpSSHPubKey =  base64decode(var.ocpSSHPubKey)
     hostname = "${var.workerNodes[count.index]["name"]}.${var.clusterName}.${var.baseDomain}"
     ipaddr = var.workerNodes[count.index]["ipaddr"]
     netMask = var.netMask
