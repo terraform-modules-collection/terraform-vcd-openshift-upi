@@ -21,6 +21,10 @@ variable "netMaskPrefix" {
   description = "Network mask prefix , e.g. -  24"
 }
 
+variable "storageProfile" {
+  type = string
+}
+
 variable "netMask" {
   type = string
   description = "Cluster network mask."

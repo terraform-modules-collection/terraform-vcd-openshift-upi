@@ -13,7 +13,7 @@ resource "vcd_vapp_vm" "bootstrap_vm" {
     bus_number       = 0
     unit_number      = 0
     iops             = 0
-    storage_profile  = "*"
+    storage_profile  = var.storageProfile
   }
   network {
     type               = var.networkType
