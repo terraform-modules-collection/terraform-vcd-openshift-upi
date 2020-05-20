@@ -1,8 +1,3 @@
-data "vcd_vapp_vm" "bootstrap-vm" {
-  name = "fakevm"
-  vapp_name = var.vappName
-}
-
 resource "vcd_vapp_vm" "bootstrap_vm" {
   vapp_name = var.vappName
   name = var.bootstrapNode.name
@@ -34,6 +29,9 @@ resource "vcd_vapp_vm" "bootstrap_vm" {
   guest_properties = {
     "guestinfo.coreos.config.data.encoding" = "base64"
     "guestinfo.coreos.config.data" = base64encode(data.ct_config.bootstrap-vm-ingition.rendered)
+  }
+  lifecycle {
+    prevent_destroy = true
   }
 }
 
