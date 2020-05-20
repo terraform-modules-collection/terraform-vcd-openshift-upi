@@ -15,7 +15,7 @@ resource "vcd_vapp_vm" "bootstrap_vm" {
     iops             = 0
     storage_profile  = var.storageProfile
   }
-  }
+
   network {
     type               = var.networkType
     name               = var.networkName
