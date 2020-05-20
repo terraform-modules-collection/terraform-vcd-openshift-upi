@@ -9,8 +9,16 @@ resource "vcd_vapp_vm" "bootstrap_vm" {
 
   override_template_disk {
     bus_type         = "paravirtual"
-    size_in_mb       = "153600"
+    size_in_mb       = local.mainDiskSize
     bus_number       = 0
+    unit_number      = 0
+    iops             = 0
+    storage_profile  = var.storageProfile
+  }
+  override_template_disk {
+    bus_type         = "paravirtual"
+    size_in_mb       = 4096
+    bus_number       = 1
     unit_number      = 0
     iops             = 0
     storage_profile  = var.storageProfile
@@ -20,6 +28,10 @@ resource "vcd_vapp_vm" "bootstrap_vm" {
     name               = var.networkName
     ip_allocation_mode = "DHCP"
     is_primary         = true
+  }
+  metadata = {
+    role    = local.bootstrapNodeLabel
+    cluster_name    = var.clusterName
   }
   guest_properties = {
     "guestinfo.coreos.config.data.encoding" = "base64"
