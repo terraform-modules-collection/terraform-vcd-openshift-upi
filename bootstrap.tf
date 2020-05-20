@@ -7,6 +7,14 @@ resource "vcd_vapp_vm" "bootstrap_vm" {
   cpus = var.bootstrapNode.cpu
   cpu_cores = var.bootstrapNode.cpu
 
+  override_template_disk {
+    bus_type         = "paravirtual"
+    size_in_mb       = "153600"
+    bus_number       = 0
+    unit_number      = 0
+    iops             = 0
+    storage_profile  = "*"
+  }
   network {
     type               = var.networkType
     name               = var.networkName
