@@ -27,7 +27,7 @@ data "template_file" "bootstrap-vm-ingition-template" {
     ocpSSHPubKey =  base64decode(var.ocpSSHPubKey)
     hostname = "${var.bootstrapNode.name}.${var.clusterName}.${var.baseDomain}"
     ipaddr = var.bootstrapNode.ipaddr
-    netMask = var.netMask
+    netMaskPrefix = var.netMaskPrefix
     netGateway = var.netGateway
     dns1 = var.dns1
     dns2  = var.dns2

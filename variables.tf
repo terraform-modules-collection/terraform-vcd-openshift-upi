@@ -16,6 +16,10 @@ variable "clusterName" {
   type = string
   description = "OpenShift cluster name."
 }
+variable "netMaskPrefix" {
+  type = string
+  description = "Network mask prefix , e.g. -  24"
+}
 
 variable "netMask" {
   type = string

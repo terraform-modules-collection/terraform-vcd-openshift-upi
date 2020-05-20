@@ -32,7 +32,7 @@ storage:
           DEVICE=ens192
           ONBOOT=yes
           IPADDR=${ipaddr}
-          PREFIX=${netMask}
+          PREFIX=${netMaskPrefix}
           GATEWAY=${netGateway}
           DOMAIN=${domain}
           DNS1=${dns1}
