@@ -83,6 +83,15 @@ variable "masterNodes" {
   description = "OpenShift master nodes bunch."
 }
 
+variable "ocsNodes" {
+  type = list(object({
+    name = string
+    ipaddr = string
+    ram = number
+    cpu = number
+  }))
+  description = "OpenShift container storage infrastructure nodes."
+}
 variable "baseDomain" {
   type = string
   description = "Base organization  domain"

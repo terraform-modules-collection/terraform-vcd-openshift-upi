@@ -15,13 +15,6 @@ resource "vcd_vapp_vm" "bootstrap_vm" {
     iops             = 0
     storage_profile  = var.storageProfile
   }
-  override_template_disk {
-    bus_type         = "paravirtual"
-    size_in_mb       = 4096
-    bus_number       = 0
-    unit_number      = 1
-    iops             = 0
-    storage_profile  = var.storageProfile
   }
   network {
     type               = var.networkType
