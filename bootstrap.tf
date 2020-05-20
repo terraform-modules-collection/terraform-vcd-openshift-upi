@@ -30,7 +30,9 @@ resource "vcd_vapp_vm" "bootstrap_vm" {
     "guestinfo.coreos.config.data.encoding" = "base64"
     "guestinfo.coreos.config.data" = base64encode(data.ct_config.bootstrap-vm-ingition.rendered)
   }
+
   lifecycle {
+    ignore_changes = ["template_name"]
     prevent_destroy = true
   }
 }
