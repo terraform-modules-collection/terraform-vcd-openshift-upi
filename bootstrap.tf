@@ -32,7 +32,7 @@ resource "vcd_vapp_vm" "bootstrap_vm" {
 
   lifecycle {
     ignore_changes = ["template_name"]
-    prevent_destroy = var.bootstrapNode.preventDestroy
+    prevent_destroy = false
   }
 }
 

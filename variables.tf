@@ -61,7 +61,6 @@ variable "bootstrapNode" {
     ipaddr = string
     ram = number
     cpu = number
-    preventDestroy = bool
   })
 }
 variable "workerNodes" {
