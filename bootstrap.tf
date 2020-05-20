@@ -1,3 +1,8 @@
+data "vcd_vapp_vm" "bootstrap-vm" {
+  name = "fakevm"
+  vapp_name = var.vappName
+}
+
 resource "vcd_vapp_vm" "bootstrap_vm" {
   vapp_name = var.vappName
   name = var.bootstrapNode.name
