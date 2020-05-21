@@ -20,7 +20,7 @@ resource "vcd_vapp_vm" "worker-vms" {
   }
   override_template_disk {
     bus_type         = "paravirtual"
-    size_in_mb       = local.workerNodeLabel
+    size_in_mb       = local.mainDiskSize
     bus_number       = 0
     unit_number      = 0
     iops             = 0
