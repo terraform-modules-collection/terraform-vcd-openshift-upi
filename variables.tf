@@ -42,26 +42,13 @@ variable "dns2" {
   description = "Second DNS server"
 }
 
-//variable "bootstrapNodeIgnUrl" {
-//  type = string
-//  description = "URL to ignition file for bootstrap node."
-//}
-//variable "masterNodesIgnUrl" {
-//  type = string
-//  description = "URL to ignition file for master nodes."
-//}
-//variable "workerNodesIgnUrl" {
-//  type = string
-//  description = "URL to ignition file for worker nodes."
-//}
-
 variable "bootstrapNode" {
-  type = object({
+  type = map(object({
     name = string
     ipaddr = string
     ram = number
     cpu = number
-  })
+  }))
 }
 variable "workerNodes" {
   type = list(object({
@@ -92,13 +79,23 @@ variable "ocsNodes" {
   }))
   description = "OpenShift container storage infrastructure nodes."
 }
+
+variable "infraNodes" {
+  type = list(object({
+    name = string
+    ipaddr = string
+    ram = number
+    cpu = number
+  }))
+  description = "OpenShift container infrastructure nodes."
+}
 variable "baseDomain" {
   type = string
   description = "Base organization  domain"
 }
 
 variable "networkType" {
-  type = "string"
+  type = string
   default = "org"
   description = "Type Vcloud Director network"
 }
@@ -113,6 +110,10 @@ variable "vappName" {
 variable "rhcosOvaTemplate" {
   type = string
   description = "RHCOS OVA template"
+}
+variable "rhcosOcsNodeTemplate" {
+  type = string
+  description = "RHCOS template for OpenShift container storage nodes"
 }
 variable "vcdCatalogName" {
   type = string
