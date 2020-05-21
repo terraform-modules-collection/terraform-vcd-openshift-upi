@@ -31,7 +31,7 @@ resource "vcd_vapp_vm" "bootstrap_vm" {
   }
 
   lifecycle {
-    ignore_changes = ["template_name"]
+    ignore_changes = [template_name, override_template_disk]
     prevent_destroy = false
   }
 }
