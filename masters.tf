@@ -1,12 +1,12 @@
 resource "vcd_vapp_vm" "masters-vms" {
-  count = length(var.masterNodes)
+  for_each = var.masterNodes
   vapp_name = var.vappName
-  name = var.masterNodes[count.index]["name"]
+  name = each.key
   catalog_name = var.vcdCatalogName
   template_name = var.rhcosOvaTemplate
-  memory =  var.masterNodes[count.index]["ram"]
-  cpus = var.masterNodes[count.index]["cpu"]
-  cpu_cores = var.masterNodes[count.index]["cpu"]
+  memory =  each.value["ram"]
+  cpus = each.value["cpu"]
+  cpu_cores = each.value["cpu"]
 
   network {
     type               = var.networkType
@@ -28,22 +28,30 @@ resource "vcd_vapp_vm" "masters-vms" {
   }
   guest_properties = {
     "guestinfo.coreos.config.data.encoding" = "base64"
-    "guestinfo.coreos.config.data" = base64encode(data.ct_config.master-vm-ingition[count.index].rendered)
+    "guestinfo.coreos.config.data" = base64encode(data.ct_config.master-vm-ingition[each.key].rendered)
+  }
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes = [
+      template_name,
+      catalog_name,
+      override_template_disk
+    ]
   }
   depends_on = [
-    vcd_vapp_vm.bootstrap_vm
+    vcd_vapp_vm.bootstrap-vm
   ]
 }
 
 data "template_file" "master-vm-ingition-template" {
-  count = length(var.masterNodes)
+  for_each = var.masterNodes
   template = file("${path.module}/templates/ignition.yaml")
   vars =  {
     ignUrl = local.masterIgnUrl
     ocpCoreUserPassHash = base64decode(var.ocpCoreUserPassHash)
     ocpSSHPubKey = base64decode(var.ocpSSHPubKey)
-    hostname = "${var.masterNodes[count.index]["name"]}.${var.clusterName}.${var.baseDomain}"
-    ipaddr = var.masterNodes[count.index]["ipaddr"]
+    hostname = "${each.key}.${var.clusterName}.${var.baseDomain}"
+    ipaddr = each.value["ipaddr"]
     netMask = var.netMask
     netGateway = var.netGateway
     dns1 = var.dns1
@@ -52,7 +60,7 @@ data "template_file" "master-vm-ingition-template" {
   }
 }
 data "ct_config" "master-vm-ingition" {
-  count = length(var.masterNodes)
-  content      = data.template_file.master-vm-ingition-template[count.index].rendered
+  for_each = var.masterNodes
+  content      = data.template_file.master-vm-ingition-template[each.key].rendered
   pretty_print = true
 }

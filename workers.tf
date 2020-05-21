@@ -1,12 +1,12 @@
 resource "vcd_vapp_vm" "worker-vms" {
-  count = length(var.workerNodes)
+  for_each = var.workerNodes
   vapp_name = var.vappName
-  name = var.workerNodes[count.index]["name"]
+  name = each.key
   catalog_name = var.vcdCatalogName
   template_name = var.rhcosOvaTemplate
-  memory =  var.workerNodes[count.index]["ram"]
-  cpus = var.workerNodes[count.index]["cpu"]
-  cpu_cores = var.workerNodes[count.index]["cpu"]
+  memory =  each.key["ram"]
+  cpus = each.key["cpu"]
+  cpu_cores = each.key["cpu"]
 
   network {
     type               = var.networkType
@@ -16,7 +16,7 @@ resource "vcd_vapp_vm" "worker-vms" {
   }
   guest_properties = {
     "guestinfo.coreos.config.data.encoding" = "base64"
-    "guestinfo.coreos.config.data" = base64encode(data.ct_config.worker-vm-ingition[count.index].rendered)
+    "guestinfo.coreos.config.data" = base64encode(data.ct_config.worker-vm-ingition[each.key].rendered)
   }
   override_template_disk {
     bus_type         = "paravirtual"
@@ -27,23 +27,31 @@ resource "vcd_vapp_vm" "worker-vms" {
     storage_profile  = var.storageProfile
   }
   metadata = {
-    role    = local.masterNodeLable
+    role    = local.workerNodeLabel
     cluster_name    = var.clusterName
   }
+  lifecycle {
+    prevent_destroy = false
+    ignore_changes = [
+      template_name,
+      catalog_name,
+      override_template_disk
+    ]
+  }
   depends_on = [
-    vcd_vapp_vm.bootstrap_vm
+    vcd_vapp_vm.bootstrap-vm
   ]
 }
 
 data "template_file" "worker-vm-ingition-template" {
-  count = length(var.workerNodes)
+  for_each = var.workerNodes
   template = file("${path.module}/templates/ignition.yaml")
   vars =  {
     ignUrl = local.workerIgnUrl
     ocpCoreUserPassHash =  base64decode(var.ocpCoreUserPassHash)
     ocpSSHPubKey =  base64decode(var.ocpSSHPubKey)
-    hostname = "${var.workerNodes[count.index]["name"]}.${var.clusterName}.${var.baseDomain}"
-    ipaddr = var.workerNodes[count.index]["ipaddr"]
+    hostname = "${each.key}.${var.clusterName}.${var.baseDomain}"
+    ipaddr = each.value["ipaddr"]
     netMask = var.netMask
     netGateway = var.netGateway
     dns1 = var.dns1
@@ -52,7 +60,7 @@ data "template_file" "worker-vm-ingition-template" {
   }
 }
 data "ct_config" "worker-vm-ingition" {
-  count = length(var.workerNodes)
-  content      = data.template_file.worker-vm-ingition-template[count.index].rendered
+  for_each = var.workerNodes
+  content      = data.template_file.worker-vm-ingition-template[each.key].rendered
   pretty_print = true
 }

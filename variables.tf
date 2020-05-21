@@ -50,8 +50,7 @@ variable "bootstrapNode" {
   }))
 }
 variable "workerNodes" {
-  type = list(object({
-    name = string
+  type = map(object({
     ipaddr = string
     ram = number
     cpu = number
@@ -60,8 +59,7 @@ variable "workerNodes" {
 }
 
 variable "masterNodes" {
-  type = list(object({
-    name = string
+  type = map(object({
     ipaddr = string
     ram = number
     cpu = number
@@ -70,8 +68,7 @@ variable "masterNodes" {
 }
 
 variable "ocsNodes" {
-  type = list(object({
-    name = string
+  type = map(object({
     ipaddr = string
     ram = number
     cpu = number
@@ -80,8 +77,7 @@ variable "ocsNodes" {
 }
 
 variable "infraNodes" {
-  type = list(object({
-    name = string
+  type = map(object({
     ipaddr = string
     ram = number
     cpu = number
