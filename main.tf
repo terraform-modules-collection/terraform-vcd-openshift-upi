@@ -8,4 +8,6 @@ locals {
   masterNodeLabel = "master"
   bootstrapNodeLabel = "bootstrap"
   workerNodeLabel = "worker"
+  infraNodeLabel = "infra"
+  ocsNodeLabel = "ocs"
 }

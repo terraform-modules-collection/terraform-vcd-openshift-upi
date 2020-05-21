@@ -1,5 +1,5 @@
-resource "vcd_vapp_vm" "masters-vms" {
-  for_each = var.masterNodes
+resource "vcd_vapp_vm" "ocs-vms" {
+  for_each = var.ocsNodes
   vapp_name = var.vappName
   name = each.key
   catalog_name = var.vcdCatalogName
@@ -14,6 +14,10 @@ resource "vcd_vapp_vm" "masters-vms" {
     ip_allocation_mode = "DHCP"
     is_primary         = true
   }
+  guest_properties = {
+    "guestinfo.coreos.config.data.encoding" = "base64"
+    "guestinfo.coreos.config.data" = base64encode(data.ct_config.ocs-vm-ingition[each.key].rendered)
+  }
   override_template_disk {
     bus_type         = "paravirtual"
     size_in_mb       = local.mainDiskSize
@@ -23,33 +27,26 @@ resource "vcd_vapp_vm" "masters-vms" {
     storage_profile  = var.storageProfile
   }
   metadata = {
-    role    = local.masterNodeLabel
+    role    = local.ocsNodeLabel
     cluster_name    = var.clusterName
   }
-  guest_properties = {
-    "guestinfo.coreos.config.data.encoding" = "base64"
-    "guestinfo.coreos.config.data" = base64encode(data.ct_config.master-vm-ingition[each.key].rendered)
-  }
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
     ignore_changes = [
       template_name,
       catalog_name,
       override_template_disk
     ]
   }
-  depends_on = [
-    vcd_vapp_vm.bootstrap-vm
-  ]
 }
 
-data "template_file" "master-vm-ingition-template" {
-  for_each = var.masterNodes
+data "template_file" "ocs-vm-ingition-template" {
+  for_each = var.ocsNodes
   template = file("${path.module}/templates/ignition.yaml")
   vars =  {
-    ignUrl = local.masterIgnUrl
-    ocpCoreUserPassHash = base64decode(var.ocpCoreUserPassHash)
-    ocpSSHPubKey = base64decode(var.ocpSSHPubKey)
+    ignUrl = local.workerIgnUrl
+    ocpCoreUserPassHash =  base64decode(var.ocpCoreUserPassHash)
+    ocpSSHPubKey =  base64decode(var.ocpSSHPubKey)
     hostname = "${each.key}.${var.clusterName}.${var.baseDomain}"
     ipaddr = each.value["ipaddr"]
     netMaskPrefix = var.netMaskPrefix
@@ -59,8 +56,8 @@ data "template_file" "master-vm-ingition-template" {
     domain = var.baseDomain
   }
 }
-data "ct_config" "master-vm-ingition" {
-  for_each = var.masterNodes
-  content      = data.template_file.master-vm-ingition-template[each.key].rendered
+data "ct_config" "ocs-vm-ingition" {
+  for_each = var.ocsNodes
+  content      = data.template_file.ocs-vm-ingition-template[each.key].rendered
   pretty_print = true
 }
