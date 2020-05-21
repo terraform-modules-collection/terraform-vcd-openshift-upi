@@ -1,6 +1,7 @@
-resource "vcd_vapp_vm" "bootstrap_vm" {
+resource "vcd_vapp_vm" "bootstrap-vm" {
+  for_each = var.bootstrapNode
   vapp_name = var.vappName
-  name = var.bootstrapNode.name
+  name = each.key
   catalog_name = var.vcdCatalogName
   template_name = var.rhcosOvaTemplate
   memory =  var.bootstrapNode.ram
@@ -27,7 +28,7 @@ resource "vcd_vapp_vm" "bootstrap_vm" {
   }
   guest_properties = {
     "guestinfo.coreos.config.data.encoding" = "base64"
-    "guestinfo.coreos.config.data" = base64encode(data.ct_config.bootstrap-vm-ingition.rendered)
+    "guestinfo.coreos.config.data" = base64encode(data.ct_config.bootstrap-vm-ingition[each.key].rendered)
   }
 
   lifecycle {
@@ -37,13 +38,14 @@ resource "vcd_vapp_vm" "bootstrap_vm" {
 }
 
 data "template_file" "bootstrap-vm-ingition-template" {
+  for_each = var.bootstrapNode
   template = file("${path.module}/templates/ignition.yaml")
   vars =  {
     ignUrl = local.bootstrapIgnUrl
     ocpCoreUserPassHash =  base64decode(var.ocpCoreUserPassHash)
     ocpSSHPubKey =  base64decode(var.ocpSSHPubKey)
-    hostname = "${var.bootstrapNode.name}.${var.clusterName}.${var.baseDomain}"
-    ipaddr = var.bootstrapNode.ipaddr
+    hostname = "${each.key}.${var.clusterName}.${var.baseDomain}"
+    ipaddr = each.value["ipaddr"]
     netMaskPrefix = var.netMaskPrefix
     netGateway = var.netGateway
     dns1 = var.dns1
@@ -52,6 +54,7 @@ data "template_file" "bootstrap-vm-ingition-template" {
   }
 }
 data "ct_config" "bootstrap-vm-ingition" {
-  content      = data.template_file.bootstrap-vm-ingition-template.rendered
+  for_each = var.bootstrapNode
+  content      = data.template_file.bootstrap-vm-ingition-template[each.key].rendered
   pretty_print = true
 }
