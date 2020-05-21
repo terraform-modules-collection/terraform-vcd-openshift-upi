@@ -44,7 +44,6 @@ variable "dns2" {
 
 variable "bootstrapNode" {
   type = map(object({
-    name = string
     ipaddr = string
     ram = number
     cpu = number

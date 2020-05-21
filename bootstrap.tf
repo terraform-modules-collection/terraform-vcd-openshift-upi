@@ -4,9 +4,9 @@ resource "vcd_vapp_vm" "bootstrap-vm" {
   name = each.key
   catalog_name = var.vcdCatalogName
   template_name = var.rhcosOvaTemplate
-  memory =  var.bootstrapNode.ram
-  cpus = var.bootstrapNode.cpu
-  cpu_cores = var.bootstrapNode.cpu
+  memory =  each.value["ram"]
+  cpus = each.value["cpu"]
+  cpu_cores = each.value["cpu"]
 
   override_template_disk {
     bus_type         = "paravirtual"
