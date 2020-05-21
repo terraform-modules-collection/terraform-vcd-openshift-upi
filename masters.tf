@@ -52,7 +52,7 @@ data "template_file" "master-vm-ingition-template" {
     ocpSSHPubKey = base64decode(var.ocpSSHPubKey)
     hostname = "${each.key}.${var.clusterName}.${var.baseDomain}"
     ipaddr = each.value["ipaddr"]
-    netMask = var.netMask
+    netMaskPrefix = var.netMaskPrefix
     netGateway = var.netGateway
     dns1 = var.dns1
     dns2  = var.dns2
