@@ -4,9 +4,9 @@ resource "vcd_vapp_vm" "worker-vms" {
   name = each.key
   catalog_name = var.vcdCatalogName
   template_name = var.rhcosOvaTemplate
-  memory =  each.key["ram"]
-  cpus = each.key["cpu"]
-  cpu_cores = each.key["cpu"]
+  memory =  each.value["ram"]
+  cpus = each.value["cpu"]
+  cpu_cores = each.value["cpu"]
 
   network {
     type               = var.networkType
