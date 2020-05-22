@@ -3,7 +3,7 @@ resource "vcd_vapp_vm" "ocs-vms" {
   vapp_name = var.vappName
   name = each.key
   catalog_name = var.vcdCatalogName
-  template_name = var.rhcosOvaTemplate
+  template_name = var.rhcosOcsNodeTemplate
   memory =  each.value["ram"]
   cpus = each.value["cpu"]
   cpu_cores = each.value["cpu"]
