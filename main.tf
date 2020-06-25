@@ -1,7 +1,3 @@
-terraform {
-  backend "consul" {}
-
-}
 
 locals {
   mainDiskSize = "153600"
